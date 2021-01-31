@@ -9,3 +9,6 @@ My interests include but are not limited to:
 - Population genetics
 - ~~Cycling, hiking, travelling~~
 
+My Master project was about plant ecology and population genetics of *Puccinellia phryganoides* on Svalbard
+(svalbard.jpg)
+
