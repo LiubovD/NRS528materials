@@ -26,6 +26,8 @@ for file in dirs_sub:
     else:
         os.mkdir(os.path.join(third_directory, file))
 
+import shutil
+shutil.rmtree(r"C:\Users\lubad\OneDrive\Documents\pythonArcGIS\new_dir")
 
 def rmdir(directory):
     directory = Path(directory)

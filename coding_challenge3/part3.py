@@ -1,10 +1,14 @@
 import csv
 import requests
 
+print("Downloading file...")
 url = 'https://raw.githubusercontent.com/datasets/co2-ppm-daily/master/data/co2-ppm-daily.csv'
 res = requests.get(url, allow_redirects=True)
-with open('co2_ed.csv','wb') as file:
+
+print("Copying file...")
+with open('co2_ed.csv', 'wb') as file:
     file.write(res.content)
+
 
 number = 0
 year_list = list()
