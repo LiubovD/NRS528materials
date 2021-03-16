@@ -4,29 +4,62 @@ import csv
 arcpy.env.overwriteOutput = True
 
 # Set your workspace to the directory where you are storing your files
-arcpy.env.workspace = r"D:\Luba\GitHub\NRS528materials\coding_challenge5"
+arcpy.env.workspace = r"C:\Data\Students_2021\Dumarevskaya\coding_challenge5"
 
 
 def make_layer(in_Table, x_coords, y_coords, out_Layer, spRef):
+    print(in_Table)
     lyr = arcpy.MakeXYEventLayer_management(in_Table, x_coords, y_coords, out_Layer, spRef)
+    arcpy.CopyFeatures_management(lyr, out_Layer)
     return lyr
 
 spRef = arcpy.SpatialReference(4326)
+
 # trying to filter by subspecies - subspecies tigris goes to one layer and altaica to another
-with open('panthera_tigris_ed.csv') as tigris_table:
-    next(tigris_table)
-    for row in tigris_table:
-        values_list = list()
-        values_list = row.split(sep=',')
-        id, sp, subsp, lat, lon = values_list
-        if subsp == "altaica":
-            Panthera_tigris_altaica = "tiger_altaica.shp"
-            make_layer(r"panthera_tigris.csv","lon", "lat", Panthera_tigris_altaica, spRef)
-        else:
-            Panthera_tigris_tigris = "tiger_tigris.shp"
-            make_layer(r"panthera_tigris.csv", "lon", "lat", Panthera_tigris_tigis, spRef)
+with open('panthera_tigris.csv') as tigris_table:
+
+    csv_reader = csv.reader(tigris_table, delimiter=',')
+    next(csv_reader)
+
+    species_list = []
+
+    for row in csv_reader:
+        #print(row[3]) # equals scientificName column for each row
+        if row[3] not in species_list:
+            species_list.append(row[3])
+
+print(species_list)
+
+for species in species_list:
+
+    #1. Make shapefile for species
+    with open('panthera_tigris.csv') as tigris_table:
+
+        csv_reader = csv.reader(tigris_table, delimiter=',')
+        header_row = next(csv_reader)
+        print(header_row)
+
+        new_csv_write = open(species + ".csv", "a")
+        new_csv_write.write(", ".join(header_row))
+        new_csv_write.write("\n")
+
+        for row in csv_reader:
+            if row[3] == species:
+                new_csv_write.write(", ".join(row))
+                new_csv_write.write("\n")
+
+        new_csv_write.close()
+
+    make_layer(species + ".csv", "decimalLongitude", "decimalLatitude", species + ".shp", spRef)
+
+    # 2. Make Fishnet for species
+
+    # 3. Spatial Join
+
+    # 4. Clean up and delete intermediate files.
 
 
+sdxhfgksdjhf
 
 # Print the total rows
 print(arcpy.GetCount_management(out_Layer))
