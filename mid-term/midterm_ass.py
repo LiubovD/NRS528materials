@@ -40,8 +40,6 @@ arcpy.analysis.Buffer(in_features=lakes, out_feature_class=Lakes_Buffer, buffer_
 
 #combining both buffers
 water_buffer = "Water_Buffer.shp"
-
-#merging buffers together
 arcpy.management.Merge(inputs=[Rivers_Buffer, Lakes_Buffer], output=water_buffer, field_mappings='StrmOrder "StrmOrder"')
 
 #finding where in preserve there is a near-water areas by intersecting water buffer with areas of preserves with high bird count
@@ -51,3 +49,10 @@ arcpy.analysis.Intersect(in_features=[[reserve_w_birds, ""], [water_buffer, ""]]
 #dissolving for easier usage
 best_observation_area = "Best_Obs_Area.shp"
 arcpy.management.Dissolve(in_features=best_observation_areas, out_feature_class=best_observation_area, dissolve_field=[], statistics_fields=[], multi_part="MULTI_PART", unsplit_lines="DISSOLVE_LINES")
+
+arcpy.Delete_management("Birds_Area.shp")
+arcpy.Delete_management("Reserve_Birds_often.shp")
+arcpy.Delete_management("Rivers_Buffer.shp")
+arcpy.Delete_management("Lakes_Buffer.shp")
+arcpy.Delete_management("Water_Buffer.shp")
+arcpy.Delete_management("Best_Obs_Areas.shp")
