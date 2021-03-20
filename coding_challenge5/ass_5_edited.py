@@ -4,7 +4,7 @@ import csv
 arcpy.env.overwriteOutput = True
 
 # Set your workspace to the directory where you are storing your files
-arcpy.env.workspace = r"C:\Data\Students_2021\Dumarevskaya\coding_challenge5"
+arcpy.env.workspace = r"D:\Luba\pythonArcGIS\mod5"
 
 
 def make_layer(in_Table, x_coords, y_coords, out_Layer, spRef):
@@ -52,14 +52,9 @@ for species in species_list:
 
     make_layer(species + ".csv", "decimalLongitude", "decimalLatitude", species + ".shp", spRef)
 
-desc = arcpy.Describe(out_Layer)
-X_Min = desc.extent.XMin
-X_Max = desc.extent.XMax
-Y_Min = desc.extent.YMin
-Y_Max = desc.extent.YMax
-print(desc, X_Min, X_Max, Y_Min, Y_Max)
-
 # 2. Make Fishnet for species
+
+
 
 def make_fishnet():
     cellSizeWidth = "1"
@@ -84,35 +79,29 @@ for species in species_list:
     Y_Min = desc.extent.YMin
     Y_Max = desc.extent.YMax
     print(desc, X_Min, X_Max, Y_Min, Y_Max)
-    make_fishnet(outFeatureClass = species + "_fishnet.shp", originCoordinate = str(X_Min) + " " + str(Y_Min),
-                 yAxisCoordinate = str(X_Min) + " " + str(Y_Min + 10), cellSizeWidth, cellSizeHeight,
-                 numRows, numColumns, oppositeCorner = str(X_Max) + " " + str(Y_Max), labels,
+    make_fishnet(species + "_fishnet.shp", str(X_Min) + " " + str(Y_Min),
+                 str(X_Min) + " " + str(Y_Min + 10), cellSizeWidth, cellSizeHeight,
+                 numRows, numColumns, str(X_Max) + " " + str(Y_Max), labels,
                  templateExtent, geometryType)
-
 
 
 # 3. Spatial Join
 
 def spatial_join():
-    target_features = "species_data_Fishnet.shp"
-    join_features = "shark_data_output.shp"
-    out_feature_class = "species_data_HeatMap.shp"
     join_operation = "JOIN_ONE_TO_ONE"
     join_type = "KEEP_ALL"
     field_mapping = ""
     match_option = "INTERSECT"
     search_radius = ""
     distance_field_name = ""
-    lyr = arcpy.SpatialJoin_analysis(target_features = species + ".shp", join_features = species + "_fishnet.shp", out_feature_class,
+    lyr = arcpy.SpatialJoin_analysis(target_features, join_features, out_feature_class,
                            join_operation, join_type, field_mapping, match_option,
                            search_radius, distance_field_name)
     return lyr
 
 
 for species in species_list:
-    spatial_join(target_features, join_features, outFeatureClass = species + "heatmap.shp",
-                 join_operation, join_type, field_mapping, match_option,
-                 search_radius, distance_field_name)    )
+    spatial_join(species + ".shp", species + "_fishnet.shp", species + "heatmap.shp")
 
 
 
