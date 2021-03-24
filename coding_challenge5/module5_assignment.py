@@ -6,6 +6,9 @@ arcpy.env.overwriteOutput = True
 # Set your workspace to the directory where you are storing your files
 arcpy.env.workspace = r"C:\Data\Students_2021\Dumarevskaya\coding_challenge5"
 
+#   I am getting a following error:
+#   "arcgisscripting.ExecuteError: ERROR 000055: Cannot create a Query Table for this workspace
+#   Failed to execute (MakeXYEventLayer)."
 
 def make_layer(in_Table, x_coords, y_coords, out_Layer, spRef):
     print(in_Table)
