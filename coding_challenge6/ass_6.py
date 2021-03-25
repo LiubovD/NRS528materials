@@ -1,21 +1,38 @@
+# in this task we are calculating NDVI values per each month
+
 import arcpy
 import os
+from arcpy.sa import *
+
 outputDirectory = "D:/Luba/pythonArcGIS/mod6/rasters"
 
+arcpy.env.overwriteOutput = True
 
+# we create a list of months and printing them
 listMonths = ["02", "04", "05", "07", "10", "11"]
+print(listMonths)
 
+# for every month in the list we set as directory a folder of this month
+# and within this folder we pick red and NIR bands
 for month in listMonths:
-    arcpy.env.workspace = "D:/Luba/pythonArcGIS/mod6/rasters/2015_" + month
+    arcpy.env.workspace = "D:/Luba/pythonArcGIS/mod6/rasters/2015" + month
     listRasters = arcpy.ListRasters("LC*", "TIF")
-#    I am getting an error in here: for file in listRasters: TypeError: 'NoneType' object is not iterable
+#    print("For month: " + month + ", there are: " + str(len(listRasters)- 1) + "bands to process.")
     for file in listRasters:
-        if "_4.tif" in file:
+        if "4.tif" in file:
             band_4 = file
-        elif "_5.tif" in file:
+        elif "5.tif" in file:
             band_5 = file
 
-    NDVI  = (band_5 - band_4) / (band_5 + band_4)
-    NDVI + month.save("D:/Luba/pythonArcGIS/mod6/rasters")
 
+
+    # based on red and NIR rasters we create raster containing NDVI values
+    output_raster = (Raster(band_5) - Raster(band_4)) / (Raster(band_5) + Raster(band_4))
+    output_raster.save(outputDirectory + "\\"+ str(month) + "_NDVI.tif")
+
+# i tried to make it check whether results printing works but it does it wrongly, not sure why
+    if arcpy.Exists(month + "_NDVI.tif"):
+        print("Created NDVI raster successfully for" + month)
+    else:
+        print("failed")
 
