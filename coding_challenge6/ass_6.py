@@ -29,8 +29,9 @@ for month in listMonths:
     # based on red and NIR rasters we create raster containing NDVI values
     output_raster = (Raster(band_5) - Raster(band_4)) / (Raster(band_5) + Raster(band_4))
     output_raster.save(outputDirectory + "\\"+ str(month) + "_NDVI.tif")
-
-# i tried to make it check whether results printing works but it does it wrongly, not sure why
+    print(month + "_NDVI.tif")\
+    
+# i tried to make it check whether results printing works but it does prints 'failed' even though file with such name exists!"
     if arcpy.Exists(month + "_NDVI.tif"):
         print("Created NDVI raster successfully for" + month)
     else:
