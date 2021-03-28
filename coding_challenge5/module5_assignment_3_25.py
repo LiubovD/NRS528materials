@@ -51,10 +51,10 @@ for species in species_list:
     make_layer(species + ".csv", "decimalLongitude", "decimalLatitude", species + ".shp", spRef)
 
     #Check if shp file was created
-        if arcpy.Exists(species + ".shp"):
-            print("Created the shapefile successfully for" + species)
-        else:
-            print("Error")
+    if arcpy.Exists(species + ".shp"):
+        print("Created the shapefile successfully for" + species)
+    else:
+        print("Error")
 
 #writing function to create fishnet files of species location
 def make_fishnet(outFeatureClass, originCoordinate,yAxisCoordinate, cellSizeWidth, cellSizeHeight, numRows, numColumns,oppositeCorner):
@@ -80,10 +80,10 @@ for species in species_list:
                  "", "", str(X_Max) + " " + str(Y_Max))
 
     #Check if shp file was created
-        if arcpy.Exists(species + "_fishnet.shp"):
-            print("Created the fishnet successfully for" + species)
-        else:
-            print("Error")
+    if arcpy.Exists(species + "_fishnet.shp"):
+        print("Created the fishnet successfully for" + species)
+    else:
+        print("Error")
 
 # writing function to spatially join fishnet and shp files
 def spatial_join(target_features, join_features, out_feature_class):
@@ -103,6 +103,8 @@ for species in species_list:
 
 # Deleting intermediate files
     print('Deleting intermediate files')
+
+for species in species_list:
     if arcpy.Exists(species + "_fishnet.shp"):
         arcpy.Delete_management(species + ".shp")
         arcpy.Delete_management(species + "heatmap.shp")
