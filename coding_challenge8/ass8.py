@@ -30,5 +30,6 @@ def making_river_buffer(towns, rivers, study_area, buffer_dist):
 
 making_river_buffer(r"D:\Luba\pythonArcGIS\mod8\data\towns.shp", r"D:\Luba\pythonArcGIS\mod8\data\Rivers.shp","NAME = 'SOUTH KINGSTOWN'", "100 Feet")
 
+#let's delete intermediate results
 arcpy.Delete_management('Study_area.shp')
 arcpy.Delete_management('Rivers_clipped.shp')
