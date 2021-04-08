@@ -105,16 +105,8 @@ for species in species_list:
     print('Deleting intermediate files')
 
 for species in species_list:
-    if arcpy.Exists(species + "_fishnet.shp"):
-        arcpy.Delete_management(species + ".shp")
-        arcpy.Delete_management(species + "heatmap.shp")
+    if arcpy.Exists(os.path.join(working_directory, species + "_fishnet.shp")):
+        arcpy.Delete_management(os.path.join(working_directory, species + ".shp"))
 
-    if arcpy.Exists(species + "_fishnet.shp"):
+    if arcpy.Exists(os.path.join(working_directory, species + "_fishnet.shp")):
         print("Created heatmaps successfully for" + species)
-
-
-
-
-
-
-
