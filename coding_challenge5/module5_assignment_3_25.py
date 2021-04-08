@@ -99,14 +99,15 @@ def spatial_join(target_features, join_features, out_feature_class):
 
 # Spatial Join of fishnet and species location for all species
 for species in species_list:
-    spatial_join(os.path.join(working_directory, species + "_fishnet.shp"), os.path.join(working_directory, species + ".shp"), os.path.join(working_directory, species + "heatmap.shp"))
+    spatial_join(os.path.join(working_directory, species + "_fishnet.shp"), os.path.join(working_directory, species + ".shp"), os.path.join(working_directory, species + "_heatmap.shp"))
 
 # Deleting intermediate files
     print('Deleting intermediate files')
 
 for species in species_list:
-    if arcpy.Exists(os.path.join(working_directory, species + "_fishnet.shp")):
+    if arcpy.Exists(os.path.join(working_directory, species + "_heatmap.shp")):
         arcpy.Delete_management(os.path.join(working_directory, species + ".shp"))
+        arcpy.Delete_management(os.path.join(working_directory, species + "_fishnet.shp"))
 
     if arcpy.Exists(os.path.join(working_directory, species + "_fishnet.shp")):
         print("Created heatmaps successfully for" + species)
