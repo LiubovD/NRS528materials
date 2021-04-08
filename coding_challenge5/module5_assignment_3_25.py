@@ -23,7 +23,7 @@ def make_layer(in_Table, x_coords, y_coords, out_Layer, spRef):
 spRef = arcpy.SpatialReference(4326)
 
 # opening table with species and creating separate tables for every species
-with open('panthera_tigris_2.csv') as tigris_table:
+with open('panthera_tigris.csv') as tigris_table:
     csv_reader = csv.reader(tigris_table, delimiter=',')
     next(csv_reader)
     species_list = []
@@ -36,7 +36,7 @@ print(species_list)
 
 for species in species_list:
 #Making shapefile for species
-    with open('panthera_tigris_2.csv') as tigris_table:
+    with open('panthera_tigris.csv') as tigris_table:
         csv_reader = csv.reader(tigris_table, delimiter=',')
         header_row = next(csv_reader)
         new_csv_write = open(species + ".csv", "w")
