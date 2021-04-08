@@ -24,7 +24,6 @@ for month in listMonths:
         elif "5.tif" in file:
             band_5 = file
 
-
 # based on red and NIR rasters we create raster containing NDVI values
     output_raster = (Raster(band_5) - Raster(band_4)) / (Raster(band_5) + Raster(band_4))
     output_raster.save(outputDirectory + "\\"+ str(month) + "_NDVI.tif")
