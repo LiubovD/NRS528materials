@@ -1,8 +1,10 @@
 import arcpy
 from arcpy import env
 
-env.workspace = "C:/Users/lubad/PycharmProjects/pythonProject1/Data"
+#setting directory
+env.workspace = r"D:\Luba\pythonArcGIS\mod4\data"
 
+#making a selection in towns layer, selecting south kingstown
 in_features = "towns.shp"
 out_feature_class = "select_south_kingstown.shp"
 where_clause = "NAME = 'SOUTH KINGSTOWN'"
