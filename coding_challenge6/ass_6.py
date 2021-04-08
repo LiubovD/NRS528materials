@@ -17,7 +17,7 @@ print(listMonths)
 for month in listMonths:
     arcpy.env.workspace = "D:/Luba/pythonArcGIS/mod6/rasters/2015" + month
     listRasters = arcpy.ListRasters("LC*", "TIF")
-#    print("For month: " + month + ", there are: " + str(len(listRasters)- 1) + "bands to process.")
+# print("For month: " + month + ", there are: " + str(len(listRasters)- 1) + "bands to process.")
     for file in listRasters:
         if "4.tif" in file:
             band_4 = file
@@ -25,15 +25,14 @@ for month in listMonths:
             band_5 = file
 
 
-
-    # based on red and NIR rasters we create raster containing NDVI values
+# based on red and NIR rasters we create raster containing NDVI values
     output_raster = (Raster(band_5) - Raster(band_4)) / (Raster(band_5) + Raster(band_4))
     output_raster.save(outputDirectory + "\\"+ str(month) + "_NDVI.tif")
     print(month + "_NDVI.tif")\
     
 # i tried to make it check whether results printing works but it does prints 'failed' even though file with such name exists!"
     if arcpy.Exists(month + "_NDVI.tif"):
-        print("Created NDVI raster successfully for" + month)
+        print("Created NDVI raster successfully for " + month)
     else:
         print("failed")
 
