@@ -9,9 +9,9 @@ import os
 
 arcpy.env.overwriteOutput = True
 
-
-arcpy.env.workspace = r"D:\Luba\pythonArcGIS\mod5\ass_5"
-os.chdir(r"D:\Luba\pythonArcGIS\mod5\ass_5")
+working_directory = r"D:\Luba\pythonArcGIS\mod5\ass_5"
+arcpy.env.workspace = working_directory
+os.chdir(working_directory)
 
 #writing function to create shp file of species location
 def make_layer(in_Table, x_coords, y_coords, out_Layer, spRef):
@@ -99,7 +99,7 @@ def spatial_join(target_features, join_features, out_feature_class):
 
 # Spatial Join of fishnet and species location for all species
 for species in species_list:
-    spatial_join(species + "_fishnet.shp", species + ".shp", species + "heatmap.shp")
+    spatial_join(os.path.join(working_directory, species + "_fishnet.shp"), os.path.join(working_directory, species + ".shp"), os.path.join(working_directory, species + "heatmap.shp"))
 
 # Deleting intermediate files
     print('Deleting intermediate files')
