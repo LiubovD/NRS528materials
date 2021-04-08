@@ -2,13 +2,7 @@
 #Make a new list that has all the elements less than 5 from this list in it and print out this new list.
 
 lst = [1, 2, 3, 6, 8, 12, 20, 32, 46, 85]
-lst2 = list()
-
-for i in lst:
-    if i < 5:
-        lst2.append(i)
-
-print(lst2)
+print([numb for numb in lst if numb < 5])
 
 
 #task 2
