@@ -27,7 +27,7 @@ class Suitable_points(object):
                                      direction="Input",  # Input|Output
                                      )
         wires_midpoint_database.value = r"D:\Luba\PhD_project_one_and_only_folder_on_PC\powerLines_zones_midPoints\powerLines_zones_midPoints.shp"
-        params.append(input_line)
+        params.append(wires_midpoint_database)
 
         suitable_wires = arcpy.Parameter(name="output",
                                  displayName="Output",
@@ -36,15 +36,15 @@ class Suitable_points(object):
                                  direction="Output",  # Input|Output
                                  )
         suitable_wires.value = r"D:\Luba\pythonArcGIS\toolbox\my_toolbox\suitable_wires.shp"  # This is a default value that can be over-ridden in the toolbox
-        params.append(output)
+        params.append(suitable_wires)
 
         expression = arcpy.Parameter(name="expression",
                                          displayName="expression for excluding not suitable for analysis wires",
                                          datatype="GPString",
                                          parameterType="Required",  # Required|Optional|Derived
                                          direction="Input")  # Input|Output
-        expression.value = "backbone = 0 AND UG_ratio < 0.25 AND length_km > 0.25"
-        params.append(output)
+        expression.value = '"backbone" = 0 AND "UG_ratio" < 0.25 AND "length_km" > 0.25'
+        params.append(expression)
         return params
 
     def isLicensed(self):
@@ -94,7 +94,7 @@ class divide_by_ETT_status(object):
                                     datatype="GPString",
                                     parameterType="Required",  # Required|Optional|Derived
                                     direction="Input")  # Input|Output
-        expression_1.value = "ETTprimYr > 2011 AND ETTprimYr < 2013"
+        expression_1.value = '"ETTprimYr" > 2011 AND "ETTprimYr" < 2013'
         params.append(expression_1)
 
         expression_2 = arcpy.Parameter(name="expression_2",
@@ -102,7 +102,7 @@ class divide_by_ETT_status(object):
                                     datatype="GPString",
                                     parameterType="Required",  # Required|Optional|Derived
                                     direction="Input")  # Input|Output
-        expression_2.value = "pctETT = 0"
+        expression_2.value = '"pctETT" = 0'
         params.append(expression_2)
 
         wires_treatment = arcpy.Parameter(name="output_treatment_wires",
