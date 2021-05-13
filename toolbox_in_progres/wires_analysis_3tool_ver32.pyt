@@ -227,35 +227,47 @@ class pair_points_by_distance(object):
         #pts_1 = list()
         #pts_2 = list()
         #fields = []
-        fields_names = ["XY_1", "ID_1", "treeCov_1", "length_1", "outages_1", "XY_2", "ID_2", "treeCov_2", "length_2",
+        fields_names = ["X_1", "Y_1", "ID_1", "treeCov_1", "length_1", "outages_1", "X_2", "Y_2", "ID_2", "treeCov_2", "length_2",
                         "outages_2", "dist"]
         arcpy.CreateTable_management(workspace, "paired_wires_table.dbf")
         for field_name in fields_names:
             arcpy.AddField_management("paired_wires_table.dbf", field_name, "text")
         arcpy.AddField_management("paired_wires_table.dbf", "outage_dif", "float")
         fields_names.append("outage_dif")
-
         IDs_of_controls_used = []
         with arcpy.da.SearchCursor(wires_treatment,["Shape@XY", "Up_Dev_ID", "pTreeCov", "length_km"] + years) as cursor_1:
             fields = []
             for row_1 in cursor_1:
                 XY_1, ID_1, treeCov_1, length_1 = row_1[0], row_1[1], row_1[2], row_1[3]
+                X_1, Y_1 = XY_1[0], XY_1[1]
                 outages_1 = sum(row_1[4:])
-                fields.extend((XY_1, ID_1, treeCov_1, length_1, outages_1))
+                fields.extend((X_1, Y_1, ID_1, treeCov_1, length_1, outages_1))
                 with arcpy.da.SearchCursor(wires_control,
                                            ["Shape@XY", "Up_Dev_ID", "pTreeCov", "length_km"] + years) as cursor_2:
                     for row_2 in cursor_2:
                         XY_2, ID_2, treeCov_2, length_2 = row_2[0], row_2[1], row_2[2], row_2[3]
+                        X_2, Y_2 = XY_2[0], XY_2[1]
                         outages_2 = sum(row_2[4:])
-                        dst = ((XY_1[0] - XY_2[0]) ** 2 + (XY_1[1] - XY_2[1]) ** 2) ** 0.5
+                        dst = ((X_1 - X_2) ** 2 + (Y_1 - Y_2) ** 2) ** 0.5
                         if (0 < dst <= 10000) and (length_1 * 0.8 <= length_2 <= length_1 * 1.2) and (treeCov_1 * 0.8 <= treeCov_2 <= treeCov_1 * 1.2) and (outages_1 != 0 or outages_2 != 0):
                             if ID_2 not in IDs_of_controls_used:
                                 IDs_of_controls_used.append(ID_2)
                                 outage_dif = outages_1 - outages_2
-                                fields.extend((XY_2, ID_2, treeCov_2, length_2, outages_2, dst, outage_dif))
-                                cursor = arcpy.da.InsertCursor("paired_wires_table.dbf", fields_names)
-                                cursor.insertRow(fields)
-                                del cursor
+                                fields.extend((X_2, Y_2, ID_2, treeCov_2, length_2, outages_2, dst, outage_dif))
+                                with arcpy.da.InsertCursor("paired_wires_table.dbf", fields_names) as cursor:
+                                    print(len(fields_names))
+                                    print(len(fields))
+                                    cursor.insertRow(fields)
+
+                                    # for row in fields_names:
+                                    #     if row[0] is None:
+                                    #         pass
+                                    #     else:
+                                            #cursor.updateRow(row)
+                                            # print(type(fields_names))
+                                            # print(type(fields))
+
+
 
 
 
