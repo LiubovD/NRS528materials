@@ -9,3 +9,5 @@ Suitable_points - To ensure accurate data analysis, this tool filters out wires 
 divide_by_ETT_status - Divide wires in 2 sets based on input parameters. This tool can be run several times (specifing new parameters) to separate groups to subgroups.
 
 pair_points_by_distance - Pair points from treatment and control datasets based on the distance (within 10 km) and close values of length and tree cover and calculate difference in the outage rate between this wires.  We can create this pairing for any two sets of wires, received using previous tool to compare their parameters.
+
+![alt text](map received with a help of 2 tools from the toolbox.png)
