@@ -4,7 +4,7 @@ This toolbox consists of 3 separate scripts that can be used in different combin
 The 3 scripts and their intended uses are:
 
 Suitable_points - To ensure accurate data analysis, this tool filters out wires which are not suitable for analysis based on several parameters (excluded are wires with more then 25 percent located underground, backbone wires and too short for analysis wires (shoreter then 250m))
-![alt text](Suitable_wires tool)
+![alt text](Suitable_wires tool.png)
 
 divide_by_ETT_status - Divide wires in 2 sets based on input parameters. This tool can be run several times (specifing new parameters) to separate groups to subgroups.
 
