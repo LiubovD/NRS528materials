@@ -35,6 +35,8 @@ class Suitable_points(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        # Parameters for this function - input geodatabase of wires with various parameters and environmental factors, 
+        #output geodatabased and expression to filter out points which are not suitable
         params = []
         wires_midpoint_database = arcpy.Parameter(name="wires_midpoint_database",
                                      displayName="Wires midpoint database",
@@ -189,6 +191,7 @@ class pair_points_by_distance(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        # define two sets of wires we are going to analyze as 2 parameters
         params = []
         wires_treatment = arcpy.Parameter(name="treatment_wires",
                                           displayName="Treatment Wires",
@@ -233,44 +236,62 @@ class pair_points_by_distance(object):
 
         workspace = r"D:\Luba\pythonArcGIS\toolbox\my_toolbox"
         arcpy.env.overwriteOutput = True
-
+        
+        # years for which outage rate is calculated
         years = ["TS_%s" % yr for yr in range(2013, 2018)]
-
+        
+        # fields in database which we will be analysing in this tool
         fields_names = ["X_1", "Y_1", "ID_1", "treeCov_1", "length_1", "outages_1", "X_2", "Y_2", "ID_2", "treeCov_2", "length_2",
                         "outages_2", "dist"]
+        
+        # create table where we will be storing paired wires
         arcpy.CreateTable_management(workspace, "paired_wires_table.dbf")
+        # add all text fields
         for field_name in fields_names:
             arcpy.AddField_management("paired_wires_table.dbf", field_name, "text")
+        # add outage difference field which should be treated as float
         arcpy.AddField_management("paired_wires_table.dbf", "outage_dif", "float")
         fields_names.append("outage_dif")
         IDs_of_controls_used = []
+        
+        # use cursor_2 for taking content of the second dataset - I places it outside of function so it wouldn't reopen every cicle thus would save time processing
         cursor_2 = arcpy.da.SearchCursor(wires_control,
                                    ["Shape@XY", "Up_Dev_ID", "pTreeCov", "length_km"] + years)
+        # used cursor_1 to take content of the first dataset
         with arcpy.da.SearchCursor(wires_treatment,["Shape@XY", "Up_Dev_ID", "pTreeCov", "length_km"] + years) as cursor_1:
+            # let's go through all the rows of first set 
             for row_1 in cursor_1:
                 fields = []
+                #naming fields
                 XY_1, ID_1, treeCov_1, length_1 = row_1[0], row_1[1], row_1[2], row_1[3]
+                # separating X from Y
                 X_1, Y_1 = XY_1[0], XY_1[1]
+                # let's summarize outages for all selected years
                 outages_1 = sum(row_1[4:])
                 fields = [X_1, Y_1, ID_1, treeCov_1, length_1, outages_1]
+                # let's go through second set
                 for row_2 in cursor_2:
+                        #naming fields
                         XY_2, ID_2, treeCov_2, length_2 = row_2[0], row_2[1], row_2[2], row_2[3]
+                        # separating X from Y
                         X_2, Y_2 = XY_2[0], XY_2[1]
+                        # let's summarize outages for all selected years
                         outages_2 = sum(row_2[4:])
+                        # calculate distance between points
                         dst = ((X_1 - X_2) ** 2 + (Y_1 - Y_2) ** 2) ** 0.5
+                        # if distance is less then 10 km and length of wire and tree canopy cover is no more different then +- 20 % then we found a pair for our point
                         if (0 < dst <= 10000) and (length_1 * 0.8 <= length_2 <= length_1 * 1.2) and (treeCov_1 * 0.8 <= treeCov_2 <= treeCov_1 * 1.2) and (outages_1 != 0 or outages_2 != 0):
+                            # if our wire was already used in previous pair - skip it, we only use a wire once
                             if ID_2 in IDs_of_controls_used:
                                 continue
+                            # otherwire we are placing in the list of used points and add in the table together with point from first set + difference in outages between them
                             else:
                                 IDs_of_controls_used.append(ID_2)
                                 print(IDs_of_controls_used)
                                 print(ID_2)
                                 outage_dif = outages_1 - outages_2
-                                print(fields)
                                 with arcpy.da.InsertCursor("paired_wires_table.dbf", fields_names) as cursor:
                                     fields.extend((X_2, Y_2, ID_2, treeCov_2, length_2, outages_2, dst, outage_dif))
-                                    print(fields_names)
-                                    print(fields)
                                     cursor.insertRow(fields)
                                     break
 
