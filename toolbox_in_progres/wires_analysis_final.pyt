@@ -86,6 +86,7 @@ class Suitable_points(object):
         suitable_wires = parameters[1].valueAsText
         expression = parameters[2].valueAsText
         arcpy.Select_analysis(wires_midpoint_database, suitable_wires, expression)
+        arcpy.AddMessage("Filtering out non-suitable points")
 
         return
 #divide_by_ETT_status - Divide wires in 2 sets based on input parameters. 
@@ -175,6 +176,8 @@ class divide_by_ETT_status(object):
 
         # Get control wires
         arcpy.Select_analysis(suitable_wires, wires_control, expression_2)
+        
+        arcpy.AddMessage("Creating two sets of wires - treatment and control")
 
         return
 
@@ -294,5 +297,6 @@ class pair_points_by_distance(object):
                                     fields.extend((X_2, Y_2, ID_2, treeCov_2, length_2, outages_2, dst, outage_dif))
                                     cursor.insertRow(fields)
                                     break
+                                    arcpy.AddMessage("Creating table of paired wires")
 
         return
